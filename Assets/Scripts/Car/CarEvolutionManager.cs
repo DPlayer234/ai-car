@@ -16,9 +16,12 @@ namespace DPlay.AICar.Car
         /// <summary> (Optional) <seealso cref="Car.CameraController"/> to follow the best current car. </summary>
         public CameraController CameraController;
 
+        /// <summary> Whether or not to disable the <seealso cref="CarControllerNeural"/> behavior on crash. </summary>
+        public bool DisableCarsOnCrash = true;
+
         /// <summary>
         ///     Initializes additional fields of new generations' members.
-        ///     Sets <seealso cref="CarControllerNeural.DisableOnCrash"/> and <seealso cref="CarControllerNeural.DrawRayCastGizmos"/> to false.
+        ///     Sets <seealso cref="CarControllerNeural.DisableOnCrash"/> and <seealso cref="CarControllerNeural.DrawRayCastGizmos"/>.
         ///     Randomly sets the color of a possible <seealso cref="MaterialPainter"/>.
         /// </summary>
         /// <param name="gameObject">The <seealso cref="GameObject"/> to initialize.</param>
@@ -42,7 +45,7 @@ namespace DPlay.AICar.Car
 
             if (carController != null)
             {
-                carController.DisableOnCrash = true;
+                carController.DisableOnCrash = DisableCarsOnCrash;
                 carController.DrawRayCastGizmos = false;
             }
         }

@@ -33,6 +33,8 @@ namespace DPlay.AICar.Car
         /// <param name="deltaTime">The time passed since the last update.</param>
         public void UpdatePosition(float deltaTime)
         {
+            if (ToFollow == null) return;
+
             // Approach Target Position
             transform.position = HelperFunctions.ExpApproach(
                 transform.position,  // Current Position
@@ -53,25 +55,10 @@ namespace DPlay.AICar.Car
         }
 
         /// <summary>
-        ///     Called by Unity once to initialize the <seealso cref="CameraController"/>.
-        /// </summary>
-        /// <exception cref="NullReferenceException">ToFollow is unset.</exception>
-        private void Awake()
-        {
-            if (ToFollow == null)
-            {
-                Destroy(this);
-                throw new NullReferenceException("ToFollow was not set.");
-            }
-        }
-
-        /// <summary>
         ///     Called by Unity when any values of the <seealso cref="CameraController"/> are changed in the editor.
         /// </summary>
         private void OnValidate()
         {
-            if (ToFollow == null) return;
-
             UpdatePosition(Mathf.Infinity);
         }
     }

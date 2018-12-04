@@ -29,7 +29,7 @@ namespace DPlay.AICar.Car
         public bool DisableOnCrash = false;
 
         /// <summary> The tag that the collided object has to have to cause a deactivation. </summary>
-        public string DisableOnCrashWithTag = "Barrier";
+        public string BarrierTag = "Barrier";
 
         /// <summary> Whether or not to draw the ray-casts as gizmos in the editor. </summary>
         public bool DrawRayCastGizmos = false;
@@ -166,10 +166,10 @@ namespace DPlay.AICar.Car
         /// <summary>
         ///     Called by Unity when a collision occurs.
         /// </summary>
-        /// <param name="collision">The collision that occured.</param>
+        /// <param name="collision">The collision that occurred.</param>
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.collider.CompareTag(DisableOnCrashWithTag))
+            if (DisableOnCrash && collision.collider.CompareTag(BarrierTag))
             {
                 enabled = false;
 

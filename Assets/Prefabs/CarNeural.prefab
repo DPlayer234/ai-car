@@ -418,7 +418,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   DisableOnCrash: 0
-  DisableOnCrashWithTag: Barrier
+  BarrierTag: Barrier
   DrawRayCastGizmos: 0
 --- !u!136 &136013673592348440
 CapsuleCollider:
