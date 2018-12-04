@@ -39,6 +39,8 @@ namespace DPlay.AICar.MachineLearning
             }
 
             Outputs = lastLayer.Outputs;
+            OutputLayer = lastLayer;
+            PredictedValues = new double[Outputs.Length];
         }
 
         public Nerve[] Inputs { get; private set; }
@@ -46,6 +48,10 @@ namespace DPlay.AICar.MachineLearning
         public INeuron[] Outputs { get; private set; }
 
         public NeuronLayer[] Layers { get; private set; }
+
+        public NeuronLayer OutputLayer { get; private set; }
+
+        public double[] PredictedValues { get; private set; }
 
         public void SetInputValues(params double[] values)
         {
@@ -62,14 +68,14 @@ namespace DPlay.AICar.MachineLearning
 
         public double[] Predict()
         {
-            double[] predictions = new double[Outputs.Length];
-
-            for (int i = 0; i < Outputs.Length; i++)
+            for (int i = 0; i < Layers.Length; i++)
             {
-                predictions[i] = Outputs[i].Predict();
+                NeuronLayer layer = Layers[i];
+
+                layer.Predict();
             }
 
-            return predictions;
+            return PredictedValues = OutputLayer.PredictedValues;
         }
 
         public double[] Predict(params double[] values)

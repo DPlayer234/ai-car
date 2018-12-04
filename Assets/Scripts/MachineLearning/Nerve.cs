@@ -12,13 +12,13 @@ namespace DPlay.AICar.MachineLearning
 
         private static double[] zeroDoubles = new double[0];
 
-        public double PredictedValue { get; set; }
-
         public INeuron[] Inputs => zeroNeurons;
 
         public double[] Weights => zeroDoubles;
 
         public double Bias { get; set; }
+
+        public double PredictedValue { get; set; }
 
         public double Predict() => PredictedValue;
     }

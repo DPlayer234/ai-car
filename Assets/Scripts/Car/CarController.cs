@@ -16,7 +16,9 @@ namespace DPlay.AICar.Car
         [Range(0.0f, 0.95f)]
         public float AngularAccelerationFactor = 0.1f;
 
-        new private Rigidbody rigidbody;
+        new protected Rigidbody rigidbody;
+
+        public float LinearSpeed => Vector3.Dot(rigidbody.velocity, transform.forward);
 
         public virtual float GetLinearSpeedInput()
         {
@@ -28,17 +30,27 @@ namespace DPlay.AICar.Car
             return Input.GetAxis("Horizontal");
         }
 
+        public float GetProcessedLinearSpeedInput()
+        {
+            return Mathf.Max(0.0f, GetLinearSpeedInput());
+        }
+
+        public float GetProcessedAngularSpeedInput()
+        {
+            return Mathf.Min(1.0f, 2.0f * Mathf.Abs(LinearSpeed) / MaximumLinearSpeed) * GetAngularSpeedInput();
+        }
+
         public void Accelerate(float deltaTime)
         {
             rigidbody.velocity = HelperFunctions.ExpApproach(
                 rigidbody.velocity,  // Current Velocity
-                MaximumLinearSpeed * GetLinearSpeedInput() * transform.forward,  // Target Velocity
+                MaximumLinearSpeed * GetProcessedLinearSpeedInput() * transform.forward,  // Target Velocity
                 LinearAccelerationFactor,
                 deltaTime);
 
             rigidbody.angularVelocity = HelperFunctions.ExpApproach(
                 rigidbody.angularVelocity,  // Current Angular Velocity
-                MaximumAngularSpeed * GetAngularSpeedInput() * Vector3.up,  // Target Angular Velocity
+                MaximumAngularSpeed * GetProcessedAngularSpeedInput() * Vector3.up,  // Target Angular Velocity
                 AngularAccelerationFactor,
                 deltaTime);
         }

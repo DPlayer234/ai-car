@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace DPlay.AICar.MachineLearning
 {
@@ -18,11 +19,25 @@ namespace DPlay.AICar.MachineLearning
             {
                 Outputs[o] = new Neuron(inputs);
             }
+
+            PredictedValues = new double[Outputs.Length];
         }
 
         public INeuron[] Inputs { get; private set; }
 
         public INeuron[] Outputs { get; private set; }
+
+        public double[] PredictedValues { get; private set; }
+
+        public double[] Predict()
+        {
+            for (int i = 0; i < Outputs.Length; i++)
+            {
+                PredictedValues[i] = Outputs[i].Predict();
+            }
+
+            return PredictedValues;
+        }
 
         public void SetAllActivationFunctions(ActivationFunction activationFunction)
         {

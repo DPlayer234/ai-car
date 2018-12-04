@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DPlay.AICar.Car
+namespace DPlay.AICar
 {
-    public static class Constants
+    public static class Globals
     {
-
+        public static readonly Random Random = new Random();
     }
 }

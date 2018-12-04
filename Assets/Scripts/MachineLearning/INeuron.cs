@@ -13,6 +13,8 @@ namespace DPlay.AICar.MachineLearning
 
         double Bias { get; set; }
 
+        double PredictedValue { get; }
+
         double Predict();
     }
 }

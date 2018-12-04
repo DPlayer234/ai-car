@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
+
+using Random = System.Random;
 
 namespace DPlay.AICar.MachineLearning
 {
@@ -12,8 +15,6 @@ namespace DPlay.AICar.MachineLearning
         private double[] weights;
 
         private INeuron[] inputs;
-
-        private static Random random = new Random();
 
         public Neuron(INeuron[] inputs)
         {
@@ -62,9 +63,11 @@ namespace DPlay.AICar.MachineLearning
 
         public double Bias { get; set; }
 
+        public double PredictedValue { get; private set; }
+
         public double Predict()
         {
-            return ActivationFunction(SumInputValues());
+            return PredictedValue = ActivationFunction(SumInputValues());
         }
 
         /// <summary>
@@ -73,7 +76,7 @@ namespace DPlay.AICar.MachineLearning
         /// <returns>A random value</returns>
         private static double GetRandomStartingValue()
         {
-            return random.NextDouble() * 2.0 - 1.0;
+            return Globals.Random.NextDouble() * 2.0 - 1.0;
         }
 
         private double SumInputValues()
@@ -82,7 +85,7 @@ namespace DPlay.AICar.MachineLearning
 
             for (int i = 0; i < Inputs.Length; i++)
             {
-                sum += Inputs[i].Predict() * Weights[i];
+                sum += Inputs[i].PredictedValue * Weights[i];
             }
 
             return sum;
