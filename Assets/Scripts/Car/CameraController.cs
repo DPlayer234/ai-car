@@ -55,6 +55,7 @@ namespace DPlay.AICar.Car
         /// <summary>
         ///     Called by Unity once to initialize the <seealso cref="CameraController"/>.
         /// </summary>
+        /// <exception cref="NullReferenceException">ToFollow is unset.</exception>
         private void Awake()
         {
             if (ToFollow == null)

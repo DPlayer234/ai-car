@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace DPlay.AICar
 {
+    /// <summary>
+    ///     Static class containing various helper functions.
+    /// </summary>
     public static class HelperFunctions
     {
         /// <summary>
@@ -27,16 +30,38 @@ namespace DPlay.AICar
             variable = component;
         }
 
+        /// <summary>
+        ///     Calculates an exponential approach to a specified value.
+        /// </summary>
+        /// <param name="current">The current value</param>
+        /// <param name="target">The target value or "limit"</param>
+        /// <param name="accelerationFactor">The acceleration factor</param>
+        /// <param name="deltaTime">The time that has passed since the last related call.</param>
+        /// <returns>The new value.</returns>
         public static float ExpApproach(float current, float target, float accelerationFactor, float deltaTime)
         {
             return target - (target - current) * Mathf.Pow(accelerationFactor, deltaTime);
         }
 
+        /// <summary>
+        ///     Calculates an exponential approach to a specified value.
+        /// </summary>
+        /// <param name="current">The current value</param>
+        /// <param name="target">The target value or "limit"</param>
+        /// <param name="accelerationFactor">The acceleration factor</param>
+        /// <param name="deltaTime">The time that has passed since the last related call.</param>
+        /// <returns>The new value.</returns>
         public static Vector3 ExpApproach(Vector3 current, Vector3 target, float accelerationFactor, float deltaTime)
         {
             return target - (target - current) * Mathf.Pow(accelerationFactor, deltaTime);
         }
 
+        /// <summary>
+        ///     Rotates a vector around the Y axis by the specified angle in degrees.
+        /// </summary>
+        /// <param name="v0">The current vector</param>
+        /// <param name="angle">The angle in degrees</param>
+        /// <returns>A new vector equal to v0 rotated by angle degrees</returns>
         public static Vector3 RotateAroundY(Vector3 v0, float angle)
         {
             float sin = Mathf.Sin(angle * Mathf.Deg2Rad);
@@ -47,12 +72,25 @@ namespace DPlay.AICar
                 v0.y,
                 cos * v0.z - sin * v0.x);
         }
-
-        public static string GetPathTo(string fileName)
+        
+        /// <summary>
+        ///     Gets the path to a file in the persistent data path.
+        /// </summary>
+        /// <param name="fileName">The file name</param>
+        /// <returns>The absolute path to the file</returns>
+        public static string GetPersistentPathTo(string fileName)
         {
             return Application.persistentDataPath + "/" + fileName;
         }
 
+        /// <summary>
+        ///     Returns a slice from an array.
+        /// </summary>
+        /// <typeparam name="T">The type of the values in the array.</typeparam>
+        /// <param name="self">The array to slice from.</param>
+        /// <param name="from">The inclusive beginning index of the slice.</param>
+        /// <param name="to">The exclusive ending index of the slice.</param>
+        /// <returns>A new array with the values in the specified area of the array.</returns>
         public static T[] Slice<T>(this T[] self, int from, int to)
         {
             T[] slice = new T[to - from];
@@ -67,6 +105,11 @@ namespace DPlay.AICar
             return slice;
         }
 
+        /// <summary>
+        ///     Converts an array of <seealso cref="float"/>s to an array of <seealso cref="double"/>s.
+        /// </summary>
+        /// <param name="source">The source array.</param>
+        /// <returns>A new array with identical values but a different data type.</returns>
         public static double[] ToDoubleArray(this float[] source)
         {
             double[] result = new double[source.Length];
@@ -79,6 +122,12 @@ namespace DPlay.AICar
             return result;
         }
 
+        /// <summary>
+        ///     Creates a new array with all values from <paramref name="src"/> copied into it.
+        /// </summary>
+        /// <typeparam name="T">The type of the values in the array.</typeparam>
+        /// <param name="src">The source array.</param>
+        /// <returns>A copy of the source array.</returns>
         public static T[] CopyArray<T>(this T[] src)
         {
             T[] dest = new T[src.Length];
@@ -91,6 +140,13 @@ namespace DPlay.AICar
             return dest;
         }
         
+        /// <summary>
+        ///     Copies an array as one with a different contained data type.
+        /// </summary>
+        /// <typeparam name="TSrc">The source data type.</typeparam>
+        /// <typeparam name="TDest">The destination data type.</typeparam>
+        /// <param name="src">The source array.</param>
+        /// <returns>A new array with the same values diguised as a different data type.</returns>
         public static TDest[] CopyAs<TSrc, TDest>(this TSrc[] src) where TSrc : TDest
         {
             TDest[] dest = new TDest[src.Length];
@@ -103,6 +159,11 @@ namespace DPlay.AICar
             return dest;
         }
 
+        /// <summary>
+        ///     Uses <see cref="Debug.Log(string)"/> to log the contents of an array.
+        /// </summary>
+        /// <typeparam name="T">The type of data in the array.</typeparam>
+        /// <param name="array">The array to log.</param>
         public static void DebugLogArray<T>(T[] array)
         {
             StringBuilder buffer = new StringBuilder();
