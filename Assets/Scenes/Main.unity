@@ -156,9 +156,12 @@ MonoBehaviour:
   SpawnPrefab: {fileID: 1210101870110210, guid: 8998201bd6f3deb41823e102628b4278,
     type: 2}
   SpawnPoint: {fileID: 193155938}
-  TotalCount: 160
-  ChildCount: 80
+  TotalCount: 120
+  ChildCount: 100
   ParentCount: 4
+  MutationChance: 0.05000000074505806
+  MinimumMutation: -0.10000000149011612
+  MaximumMutation: 0.10000000149011612
   MaximumGenerationAge: 10
   GenerationAge: 0
   CameraController: {fileID: 1675185846}

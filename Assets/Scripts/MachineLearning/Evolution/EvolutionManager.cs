@@ -37,6 +37,18 @@ namespace DPlay.AICar.MachineLearning.Evolution
         [Range(2, 10)]
         public int ParentCount = 4;
 
+        /// <summary> Mutation chance per gene per individium. </summary>
+        [Range(0.0f, 1.0f)]
+        public double MutationChance = 0.05f;
+
+        /// <summary> The minimum mutation addition possible. </summary>
+        [Range(-1.0f, 0.0f)]
+        public double MinimumMutation = -0.1f;
+
+        /// <summary> The maximum mutation addition possible. </summary>
+        [Range(0.0f, 1.0f)]
+        public double MaximumMutation = 0.1f;
+
         /// <summary> The time in seconds after which a new generation is started, even if not all members of the current one have become inactive. </summary>
         [Range(10.0f, 300.0f)]
         public float MaximumGenerationAge = 20.0f;
@@ -153,7 +165,7 @@ namespace DPlay.AICar.MachineLearning.Evolution
             // Add the parents still.
             for (int i = 0; i < parentCount; i++)
             {
-                childGenomes[i] = parentGenomes[i];
+                childGenomes[i] = MutateGenome(parentGenomes[i].CopyArray());
             }
 
             // Generate the children...
@@ -167,10 +179,30 @@ namespace DPlay.AICar.MachineLearning.Evolution
                     childGenome[g] = parentGenomes[Globals.Random.Next(parentCount)][g];
                 }
 
+                MutateGenome(childGenome);
+
                 childGenomes[i] = childGenome;
             }
 
             return childGenomes;
+        }
+
+        /// <summary>
+        ///     Mutates a genome based on parameters. Does not create a new array but modifies the existing one.
+        /// </summary>
+        /// <param name="genome">The genome to mutate.</param>
+        /// <returns>The original array.</returns>
+        public double[] MutateGenome(double[] genome)
+        {
+            for (int i = 0; i < genome.Length; i++)
+            {
+                if (Globals.Random.NextDouble() < MutationChance)
+                {
+                    genome[i] += GetMutationAdder();
+                }
+            }
+
+            return genome;
         }
 
         /// <summary>
@@ -205,6 +237,16 @@ namespace DPlay.AICar.MachineLearning.Evolution
         public double[] GetBestGenome()
         {
             return GetBestGenomes(1)[0];
+        }
+
+        /// <summary>
+        ///     Gets a random value in the range [<seealso cref="MinimumMutation"/> .. <seealso cref="MaximumMutation"/>] to be added as mutation to a gene.
+        /// </summary>
+        /// <returns>A random value in the range [<seealso cref="MinimumMutation"/> .. <seealso cref="MaximumMutation"/>]</returns>
+        public double GetMutationAdder()
+        {
+            double difference = MaximumMutation - MinimumMutation;
+            return Globals.Random.NextDouble() * difference - difference * 0.5;
         }
 
         /// <summary>
