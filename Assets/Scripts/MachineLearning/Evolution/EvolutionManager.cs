@@ -58,9 +58,9 @@ namespace DPlay.AICar.MachineLearning.Evolution
         public List<IEvolvable> CurrentGeneration { get; private set; }
 
         /// <summary>
-        ///     The best genome of the last generation. May be null.
+        ///     The best genomes of the last generation. May be null.
         /// </summary>
-        public double[] BestGenomeOfLastGeneration { get; private set; }
+        public double[][] BestGenomeOfLastGeneration { get; private set; }
 
         /// <summary>
         ///     The amount of generation that have already passed.
@@ -86,11 +86,11 @@ namespace DPlay.AICar.MachineLearning.Evolution
             // Pick the best genes
             double[][] bestGenomes = GetBestGenomes(ParentCount);
 
+            // Save the best genomes
+            BestGenomeOfLastGeneration = bestGenomes;
+
             // Cross those genes for new cars
             double[][] newGenomes = CrossGenomes(ChildCount, bestGenomes);
-
-            // The best genome of the last generation
-            BestGenomeOfLastGeneration = bestGenomes[0];
 
             // Override the new generation's genes
             DestroyGeneration();
@@ -245,7 +245,7 @@ namespace DPlay.AICar.MachineLearning.Evolution
 
             foreach (var evolvable in CurrentGeneration)
             {
-                if (evolvable.Active)
+                if (evolvable.enabled)
                 {
                     anyActive = true;
                     break;
@@ -289,7 +289,7 @@ namespace DPlay.AICar.MachineLearning.Evolution
         }
         
         /// <summary>
-        ///     Called by Unity when any values of the <seealso cref="EvolutionManager"/> are changed in the editor are changed.
+        ///     Called by Unity when any values of the <seealso cref="EvolutionManager"/> are changed in the editor.
         /// </summary>
         private void OnValidate()
         {

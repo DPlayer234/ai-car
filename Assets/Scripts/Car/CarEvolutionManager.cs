@@ -8,11 +8,20 @@ using UnityEngine;
 
 namespace DPlay.AICar.Car
 {
+    /// <summary>
+    ///     A class based on <see cref="EvolutionManager"/> specifically to handle the evolution of <see cref="CarControllerNeural"/>.
+    /// </summary>
     public class CarEvolutionManager : EvolutionManager
     {
         /// <summary> (Optional) <seealso cref="Car.CameraController"/> to follow the best current car. </summary>
         public CameraController CameraController;
 
+        /// <summary>
+        ///     Initializes additional fields of new generations' members.
+        ///     Sets <seealso cref="CarControllerNeural.DisableOnCrash"/> and <seealso cref="CarControllerNeural.DrawRayCastGizmos"/> to false.
+        ///     Randomly sets the color of a possible <seealso cref="MaterialPainter"/>.
+        /// </summary>
+        /// <param name="gameObject">The <seealso cref="GameObject"/> to initialize.</param>
         protected override void InitializeChild(GameObject gameObject)
         {
             byte[] colorBytes = new byte[3];
@@ -38,6 +47,9 @@ namespace DPlay.AICar.Car
             }
         }
 
+        /// <summary>
+        ///     Called by Unity to update the <seealso cref="CarEvolutionManager"/> each frame.
+        /// </summary>
         protected override void Update()
         {
             if (CameraController != null)
@@ -47,7 +59,7 @@ namespace DPlay.AICar.Car
 
                 foreach (var member in CurrentGeneration)
                 {
-                    if (member.Active && member.Fitness > bestFitness)
+                    if (member.enabled && member.Fitness > bestFitness)
                     {
                         bestFitness = member.Fitness;
                         bestCar = member as CarController;
