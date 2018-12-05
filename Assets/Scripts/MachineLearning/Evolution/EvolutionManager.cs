@@ -53,8 +53,8 @@ namespace DPlay.AICar.MachineLearning.Evolution
         [Range(10.0f, 300.0f)]
         public float MaximumGenerationAge = 20.0f;
 
-        /// <summary> The current age of the generation in seconds. </summary>
-        public float GenerationAge;
+        /// <summary> Contains the best genome codes after calling <see cref="GetBestLastGenomeCodes"/> </summary>
+        public string[] BestLastGenomeCodes;
 
         /// <summary> This transform is the parent of all members of the current generation. </summary>
         private Transform generationRoot;
@@ -72,12 +72,15 @@ namespace DPlay.AICar.MachineLearning.Evolution
         /// <summary>
         ///     The best genomes of the last generation. May be null.
         /// </summary>
-        public double[][] BestGenomeOfLastGeneration { get; private set; }
+        public double[][] BestGenomesOfLastGeneration { get; private set; }
 
         /// <summary>
         ///     The amount of generation that have already passed.
         /// </summary>
         public int GenerationIndex { get; private set; }
+
+        /// <summary> The current age of the generation in seconds. </summary>
+        public float CurrentGenerationAge { get; private set; }
 
         /// <summary>
         ///     Generates the first generation.
@@ -87,7 +90,8 @@ namespace DPlay.AICar.MachineLearning.Evolution
             DestroyGeneration();
             CurrentGeneration = GenerateBaseGeneration();
 
-            GenerationAge = 0.0f;
+            CurrentGenerationAge = 0.0f;
+            GenerationIndex = 0;
         }
 
         /// <summary>
@@ -99,7 +103,7 @@ namespace DPlay.AICar.MachineLearning.Evolution
             double[][] bestGenomes = GetBestGenomes(ParentCount);
 
             // Save the best genomes
-            BestGenomeOfLastGeneration = bestGenomes;
+            BestGenomesOfLastGeneration = bestGenomes;
 
             // Cross those genes for new cars
             double[][] newGenomes = CrossGenomes(ChildCount, bestGenomes);
@@ -108,7 +112,7 @@ namespace DPlay.AICar.MachineLearning.Evolution
             DestroyGeneration();
             CurrentGeneration = GenerateBaseGeneration();
 
-            GenerationAge = 0.0f;
+            CurrentGenerationAge = 0.0f;
             GenerationIndex++;
 
             for (int i = 0; i < newGenomes.Length; i++)
@@ -206,6 +210,16 @@ namespace DPlay.AICar.MachineLearning.Evolution
         }
 
         /// <summary>
+        ///     Gets a random value in the range [<seealso cref="MinimumMutation"/> .. <seealso cref="MaximumMutation"/>] to be added as mutation to a gene.
+        /// </summary>
+        /// <returns>A random value in the range [<seealso cref="MinimumMutation"/> .. <seealso cref="MaximumMutation"/>]</returns>
+        public double GetMutationAdder()
+        {
+            double difference = MaximumMutation - MinimumMutation;
+            return Globals.Random.NextDouble() * difference - difference * 0.5;
+        }
+
+        /// <summary>
         ///     Gets the best genomes of the current generation.
         /// </summary>
         /// <param name="amount">The amount of genomes to return.</param>
@@ -240,13 +254,24 @@ namespace DPlay.AICar.MachineLearning.Evolution
         }
 
         /// <summary>
-        ///     Gets a random value in the range [<seealso cref="MinimumMutation"/> .. <seealso cref="MaximumMutation"/>] to be added as mutation to a gene.
+        ///     Generates the genome codes for the best indiviums of the last generation.
+        ///     Also writes the value to <see cref="BestLastGenomeCodes"/>.
         /// </summary>
-        /// <returns>A random value in the range [<seealso cref="MinimumMutation"/> .. <seealso cref="MaximumMutation"/>]</returns>
-        public double GetMutationAdder()
+        /// <returns>The best genome codes of the last generation.</returns>
+        [ContextMenu("Generate Best Codes")]
+        public string[] GetBestLastGenomeCodes()
         {
-            double difference = MaximumMutation - MinimumMutation;
-            return Globals.Random.NextDouble() * difference - difference * 0.5;
+            double[][] genomes = BestGenomesOfLastGeneration;
+            if (genomes == null) return null;
+
+            string[] codes = new string[genomes.Length];
+
+            for (int i = 0; i < genomes.Length; i++)
+            {
+                codes[i] = NeuralNetWeightSerializer.ToWeightCode(genomes[i]);
+            }
+
+            return BestLastGenomeCodes = codes;
         }
 
         /// <summary>
@@ -281,7 +306,7 @@ namespace DPlay.AICar.MachineLearning.Evolution
         {
             if (CurrentGeneration == null || generationRoot == null) return;
 
-            GenerationAge += Time.deltaTime;
+            CurrentGenerationAge += Time.deltaTime;
 
             bool anyActive = false;
 
@@ -294,7 +319,7 @@ namespace DPlay.AICar.MachineLearning.Evolution
                 }
             }
 
-            if (!anyActive || GenerationAge > MaximumGenerationAge)
+            if (!anyActive || CurrentGenerationAge > MaximumGenerationAge)
             {
                 GenerateNextGeneration();
             }
