@@ -24,18 +24,12 @@ namespace DPlay.AICar.Car
         /// <param name="gameObject">The <seealso cref="GameObject"/> to initialize.</param>
         protected override void InitializeChild(GameObject gameObject)
         {
-            byte[] colorBytes = new byte[3];
             
             MaterialPainter painter = gameObject.GetComponent<MaterialPainter>();
 
             if (painter != null)
             {
-                Globals.Random.NextBytes(colorBytes);
-
-                painter.Color = new Color(
-                    colorBytes[0] / 255.0f,
-                    colorBytes[1] / 255.0f,
-                    colorBytes[2] / 255.0f);
+                painter.Color = HelperFunctions.GetRandomColor();
             }
         }
 

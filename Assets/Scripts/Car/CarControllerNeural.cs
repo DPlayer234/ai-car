@@ -85,6 +85,7 @@ namespace DPlay.AICar.Car
         ///     Overrides the current genome.
         /// </summary>
         /// <param name="genes">An array of <seealso cref="double"/>s, representing the new genome.</param>
+        /// <exception cref="ArgumentException">Amount of genes supplied does not match amount of genes expected.</exception>
         public void SetGenome(double[] genes)
         {
             Brain.SetAllWeights(genes);

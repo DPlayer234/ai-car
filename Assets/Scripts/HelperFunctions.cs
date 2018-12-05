@@ -175,5 +175,32 @@ namespace DPlay.AICar
 
             Debug.Log(buffer);
         }
+
+        /// <summary>
+        ///     Creates a random color.
+        /// </summary>
+        /// <returns>A random color.</returns>
+        public static Color GetRandomColor()
+        {
+            byte[] colorBytes = new byte[3];
+            Globals.Random.NextBytes(colorBytes);
+
+            return new Color(
+                colorBytes[0] / 255.0f,
+                colorBytes[1] / 255.0f,
+                colorBytes[2] / 255.0f);
+        }
+
+        /// <summary>
+        ///     Gets a random float in the supplied range.
+        /// </summary>
+        /// <param name="maximum">The minimum possible value.</param>
+        /// <param name="minimum">The maximum possible value.</param>
+        /// <returns>A random float.</returns>
+        public static float GetRandomFloat(float minimum, float maximum)
+        {
+            float difference = maximum - minimum;
+            return (float)(Globals.Random.NextDouble() * difference - difference * 0.5);
+        }
     }
 }

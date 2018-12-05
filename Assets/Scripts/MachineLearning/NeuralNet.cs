@@ -154,6 +154,7 @@ namespace DPlay.AICar.MachineLearning
         ///     Sets all weights, including biases, of the net with a flat array.
         /// </summary>
         /// <param name="weights">An array of all weights.</param>
+        /// <exception cref="ArgumentException">Amount of weights supplied does not match amount of weights expected.</exception>
         public void SetAllWeights(double[] weights)
         {
             if (weights.Length != GetWeightCount())

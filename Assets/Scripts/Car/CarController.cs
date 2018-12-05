@@ -11,6 +11,12 @@ namespace DPlay.AICar.Car
     [RequireComponent(typeof(Rigidbody))]
     public class CarController : MonoBehaviour
     {
+        /// <summary> The maximum recognized input forward. </summary>
+        public const float MaximumForwardInput = 1.0f;
+        
+        /// <summary> The minimum recognized input backward. </summary>
+        public const float MinimumBackwardInput = -0.15f;
+
         /// <summary> The maximum linear speed the car may have going forward. </summary>
         public float MaximumLinearSpeed = 8.0f;
 
@@ -55,7 +61,7 @@ namespace DPlay.AICar.Car
         /// <returns>The processed input value.</returns>
         public float GetProcessedLinearSpeedInput()
         {
-            return Mathf.Clamp(GetLinearSpeedInput(), 0.0f, 1.0f);
+            return Mathf.Clamp(GetLinearSpeedInput(), MinimumBackwardInput, MaximumForwardInput);
         }
 
         /// <summary>
