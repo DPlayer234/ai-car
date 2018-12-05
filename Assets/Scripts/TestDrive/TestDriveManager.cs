@@ -9,17 +9,26 @@ using DPlay.AICar.MachineLearning;
 
 namespace DPlay.AICar.TestDrive
 {
+    /// <summary>
+    ///     Manages test driving
+    /// </summary>
     public class TestDriveManager : MonoBehaviour
     {
+        /// <summary> The prefab for cars with a neural network. </summary>
         public CarControllerNeural CarNeuralPrefab;
 
         /// <summary> The "spawn point" of the cars. Position and rotation of new members is overridden to the one of this <seealso cref="Transform"/>. </summary>
         public Transform SpawnPoint;
 
+        /// <summary> How far from the <seealso cref="SpawnPoint"/> cars may be spawned. </summary>
         public float MaximumSpawnOffset;
 
+        /// <summary> Root transform for all spawned cars. </summary>
         private Transform spawnRoot;
 
+        /// <summary>
+        ///     Destroys all spawned cars.
+        /// </summary>
         public void DestroyAllCars()
         {
             if (spawnRoot != null)
@@ -31,11 +40,19 @@ namespace DPlay.AICar.TestDrive
             spawnRoot.parent = transform;
         }
 
+        /// <summary>
+        ///     Spawns a neural car with the given genome code.
+        /// </summary>
+        /// <param name="genomeCode">The genome code for the car's brain.</param>
         public void SpawnNeuralCar(string genomeCode)
         {
             SpawnNeuralCar(NeuralNetWeightSerializer.ToWeights(genomeCode));
         }
 
+        /// <summary>
+        ///     Spawns a neuron car with the given genes.
+        /// </summary>
+        /// <param name="genes">The genes for car's brain.</param>
         public void SpawnNeuralCar(double[] genes)
         {
             CarControllerNeural car = SpawnCar(CarNeuralPrefab);
@@ -51,11 +68,20 @@ namespace DPlay.AICar.TestDrive
             }
         }
 
+        /// <summary>
+        ///     Spawns a car using steering behavior.
+        /// </summary>
         public void SpawnSteeringCar()
         {
             // TODO
         }
 
+        /// <summary>
+        ///     Spawns a car of a specific type and returns it.
+        /// </summary>
+        /// <typeparam name="TCar">The type of the <seealso cref="CarController"/></typeparam>
+        /// <param name="prefab">The prefab used to spawn the new car.</param>
+        /// <returns>The newly spawned <seealso cref="CarController"/></returns>
         private TCar SpawnCar<TCar>(TCar prefab) where TCar : CarController
         {
             TCar car = Instantiate(prefab, SpawnPoint.position, SpawnPoint.rotation, spawnRoot);
@@ -75,6 +101,9 @@ namespace DPlay.AICar.TestDrive
             return car;
         }
 
+        /// <summary>
+        ///     Called by Unity once to initialize the <see cref="TestDriveManager"/>.
+        /// </summary>
         private void Awake()
         {
             DestroyAllCars();

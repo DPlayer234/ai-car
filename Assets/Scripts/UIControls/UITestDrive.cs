@@ -12,18 +12,29 @@ using UnityEngine.Events;
 
 namespace DPlay.AICar.UIControls
 {
+    /// <summary>
+    ///     Provides function to be used in the Test Drive Menu and sets it up.
+    /// </summary>
     public class UITestDrive : MonoBehaviour
     {
+        /// <summary> The used <seealso cref="TestDrive.TestDriveManager"/>. </summary>
         public TestDriveManager TestDriveManager;
 
+        /// <summary> The root element for the neural agent spawner input field and button. </summary>
         public GameObject NeuralAgentSpawnerElement;
 
+        /// <summary> The root element for the steering agent spawner button. </summary>
         public GameObject SteeringAgentSpawnerElement;
 
+        /// <summary> The root element for the reset button. </summary>
         public GameObject ResetElement;
 
+        /// <summary> The root element for the camera swap button. </summary>
         public GameObject TopDownCameraElement;
 
+        /// <summary>
+        ///     Initializes <see cref="NeuralAgentSpawnerElement"/>.
+        /// </summary>
         private void InitializeNeuralAgentSpawnerElement()
         {
             InputField inputField = NeuralAgentSpawnerElement.GetComponentInChildren<InputField>();
@@ -36,6 +47,9 @@ namespace DPlay.AICar.UIControls
             });
         }
 
+        /// <summary>
+        ///     Initializes <see cref="SteeringAgentSpawnerElement"/>.
+        /// </summary>
         private void InitializeSteeringAgentSpawnerElement()
         {
             Button spawnButton = SteeringAgentSpawnerElement.GetComponentInChildren<Button>();
@@ -43,6 +57,9 @@ namespace DPlay.AICar.UIControls
             spawnButton.onClick.AddListener(() => TestDriveManager.SpawnSteeringCar());
         }
 
+        /// <summary>
+        ///     Initializes <see cref="ResetElement"/>.
+        /// </summary>
         private void InitializeResetElement()
         {
             Button spawnButton = ResetElement.GetComponentInChildren<Button>();
@@ -50,6 +67,9 @@ namespace DPlay.AICar.UIControls
             spawnButton.onClick.AddListener(() => TestDriveManager.DestroyAllCars());
         }
 
+        /// <summary>
+        ///     Initializes <see cref="TopDownCameraElement"/>.
+        /// </summary>
         private void InitializeTopDownCameraElement()
         {
             Camera[] cameras = FindObjectsOfType<Camera>();
@@ -67,8 +87,18 @@ namespace DPlay.AICar.UIControls
             });
         }
 
+        /// <summary>
+        ///     Called by Unity to initialize the <see cref="UITestDrive"/>.
+        /// </summary>
         private void Awake()
         {
+            if (TestDriveManager == null)
+            {
+                Debug.LogError("No TestDriveManager was assigned.");
+                Destroy(this);
+                return;
+            }
+
             if (NeuralAgentSpawnerElement != null)
             {
                 InitializeNeuralAgentSpawnerElement();
