@@ -13,6 +13,12 @@ namespace DPlay.AICar.Car
     /// </summary>
     public class CarControllerNeural : CarController, IEvolvable
     {
+        /// <summary> Total multiplier on fitness increases and decreases. </summary>
+        public const double TotalFitnessMultiplier = 10.0;
+
+        /// <summary> Multiplier for the fitness reduction caused by driving in reverse. </summary>
+        public const double ReverseDrivingFitnessPenaltyMultiplier = 20.0;
+
         /// <summary> Angles for the input ray-casts. </summary>
         public float[] RayCastAngles = { -35, 0, 35, 180 };
 
@@ -142,8 +148,14 @@ namespace DPlay.AICar.Car
             RecordRayCasts();
 
             base.FixedUpdate();
+            
+            double fitnessDelta = LinearSpeed * Time.fixedDeltaTime * TotalFitnessMultiplier;
+            if (fitnessDelta < 0.0f)
+            {
+                fitnessDelta *= ReverseDrivingFitnessPenaltyMultiplier;
+            }
 
-            Fitness += LinearSpeed * 10.0f * Time.fixedDeltaTime;
+            Fitness += fitnessDelta;
         }
 
         /// <summary>

@@ -9,12 +9,12 @@ EditorBuildSettings:
     path: Assets/Scenes/Prefabs.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 8bcece042deca774bbcc4ac89daaf7d2
+  - enabled: 1
     path: Assets/Scenes/Evolution.unity
     guid: 84277ce5eb75dbb46a387424ad329d19
   - enabled: 1
     path: Assets/Scenes/TestDrive.unity
     guid: b0627e93e00e0ea49bc466567bb39d26
-  - enabled: 1
-    path: Assets/Scenes/MainMenu.unity
-    guid: 8bcece042deca774bbcc4ac89daaf7d2
   m_configObjects: {}

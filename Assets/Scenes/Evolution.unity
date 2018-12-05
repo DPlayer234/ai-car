@@ -295,6 +295,7 @@ MonoBehaviour:
   MaximumGenerationAge: 10
   BestLastGenomeCodes: []
   CameraController: {fileID: 0}
+  MaximumSpawnOffset: 1
 --- !u!1 &238480433
 GameObject:
   m_ObjectHideFlags: 0
@@ -760,7 +761,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed1c2aa5e5f7faf4b8d7afa8c953203d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CarEvolutionManager: {fileID: 193155939}
+  EvolutionManager: {fileID: 193155939}
   MaximumGenerationAgeElement: {fileID: 1815860472}
   CurrentGenerationAgeElement: {fileID: 340350525}
   CurrentGenerationElement: {fileID: 508104327}

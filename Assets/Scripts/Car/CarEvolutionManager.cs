@@ -17,6 +17,9 @@ namespace DPlay.AICar.Car
         /// <summary> (Optional) <seealso cref="Car.CameraController"/> to follow the best current car. </summary>
         public CameraController CameraController;
 
+        /// <summary> How far from the <seealso cref="SpawnPoint"/> cars may be spawned. </summary>
+        public float MaximumSpawnOffset;
+
         /// <summary>
         ///     Initializes additional fields of new generations' members.
         ///     Randomly sets the color of a possible <seealso cref="MaterialPainter"/>.
@@ -24,7 +27,11 @@ namespace DPlay.AICar.Car
         /// <param name="gameObject">The <seealso cref="GameObject"/> to initialize.</param>
         protected override void InitializeChild(GameObject gameObject)
         {
-            
+            gameObject.transform.position += new Vector3(
+                HelperFunctions.GetRandomFloat(-MaximumSpawnOffset, MaximumSpawnOffset),
+                0.0f,
+                HelperFunctions.GetRandomFloat(-MaximumSpawnOffset, MaximumSpawnOffset));
+
             MaterialPainter painter = gameObject.GetComponent<MaterialPainter>();
 
             if (painter != null)
