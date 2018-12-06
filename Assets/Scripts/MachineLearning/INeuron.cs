@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace DPlay.AICar.MachineLearning
+﻿namespace DPlay.AICar.MachineLearning
 {
     /// <summary>
     ///     Interface for neurons and nerves.

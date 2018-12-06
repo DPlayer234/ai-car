@@ -1,15 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DPlay.AICar.Car
 {
     /// <summary>
     ///     Implements basic behavior to have a controllable car.
-    ///     This default implementation allows manual control via the arrow keys/WASD/whatever is set as the Horizontal/Vertical axis.
     /// </summary>
     [RequireComponent(typeof(Rigidbody))]
-    public class CarController : MonoBehaviour
+    [DisallowMultipleComponent]
+    public abstract class CarController : MonoBehaviour
     {
         /// <summary> The maximum recognized input forward. </summary>
         public const float MaximumForwardInput = 1.0f;
@@ -41,19 +39,13 @@ namespace DPlay.AICar.Car
         ///     Gets the linear speed input. This should be in range [-1.0..1.0] to not cause unexpected behavior.
         /// </summary>
         /// <returns>The input value.</returns>
-        public virtual float GetLinearSpeedInput()
-        {
-            return Input.GetAxis("Vertical");
-        }
+        public abstract float GetLinearSpeedInput();
 
         /// <summary>
         ///     Gets the angular speed input. This should be in range [-1.0..1.0] to not cause unexpected behavior.
         /// </summary>
         /// <returns>The input value.</returns>
-        public virtual float GetAngularSpeedInput()
-        {
-            return Input.GetAxis("Horizontal");
-        }
+        public abstract float GetAngularSpeedInput();
 
         /// <summary>
         ///     Gets the processed linear input. Clamps to [0.0..1.0].

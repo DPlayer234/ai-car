@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace DPlay.AICar.Car
 {
     /// <summary>
     ///     Controls the camera (own transform) to follow something.
     /// </summary>
+    [DisallowMultipleComponent]
     public class CameraController : MonoBehaviour
     {
         /// <summary> The <see cref="Transform"/> to follow. </summary>
@@ -47,11 +44,11 @@ namespace DPlay.AICar.Car
         }
 
         /// <summary>
-        ///     Called by Unity to update the <seealso cref="CameraController"/> each frame.
+        ///     Called by Unity to update the <seealso cref="CameraController"/> each fixed update.
         /// </summary>
-        private void Update()
+        private void FixedUpdate()
         {
-            UpdatePosition(Time.deltaTime);
+            UpdatePosition(Time.fixedDeltaTime);
         }
 
         /// <summary>

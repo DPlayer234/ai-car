@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using UnityEngine;
 
 namespace DPlay.AICar
@@ -14,7 +11,7 @@ namespace DPlay.AICar
         /// <summary>
         ///     Gets a <seealso cref="Component"/> of the specified type from the <seealso cref="MonoBehaviour"/> and assigns it to the given <paramref name="variable"/>.
         /// </summary>
-        /// <exception cref="NullReferenceException">No such <seealso cref="Component"/> is attached.</exception>
+        /// <exception cref="UnassignedReferenceException">No such <seealso cref="Component"/> is attached.</exception>
         /// <typeparam name="T">The type of the <seealso cref="Component"/>.</typeparam>
         /// <param name="self">The <seealso cref="MonoBehaviour"/> to get the <seealso cref="Component"/> from.</param>
         /// <param name="variable">The variable to assign the <seealso cref="Component"/> to.</param>
@@ -24,7 +21,7 @@ namespace DPlay.AICar
 
             if (component == null)
             {
-                throw new NullReferenceException("No such Component is attached.");
+                throw new UnassignedReferenceException("No such Component is attached.");
             }
 
             variable = component;

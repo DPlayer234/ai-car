@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace DPlay.AICar.Car
+namespace DPlay.AICar.Misc
 {
     /// <summary>
     ///     Paints all specified <see cref="Renderer"/>s' <see cref="Material"/>s with the specified color.

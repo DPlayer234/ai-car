@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -13,6 +9,7 @@ namespace DPlay.AICar
     ///     Provides static functions to load a scene.
     ///     May also be used as a <seealso cref="Component"/> to make buttons load scenes.
     /// </summary>
+    [DisallowMultipleComponent]
     public class SceneLoader : MonoBehaviour
     {
         /// <summary> The scene to load. </summary>

@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DPlay.AICar.Car;
-using DPlay.AICar.MachineLearning;
+﻿using DPlay.AICar.MachineLearning;
 using DPlay.AICar.TestDrive;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
 
 namespace DPlay.AICar.UIControls
 {
     /// <summary>
-    ///     Provides function to be used in the Test Drive Menu and sets it up.
+    ///     Provides functions to be used in the Test Drive Menu and sets it up.
     /// </summary>
+    [DisallowMultipleComponent]
     public class UITestDrive : MonoBehaviour
     {
         /// <summary> The used <seealso cref="TestDrive.TestDriveManager"/>. </summary>
@@ -28,6 +22,9 @@ namespace DPlay.AICar.UIControls
 
         /// <summary> The root element for the reset button. </summary>
         public GameObject ResetElement;
+
+        /// <summary> The root element for the switch follow button. </summary>
+        public GameObject SwitchFollowElement;
 
         /// <summary> The root element for the camera swap button. </summary>
         public GameObject TopDownCameraElement;
@@ -65,6 +62,16 @@ namespace DPlay.AICar.UIControls
             Button spawnButton = ResetElement.GetComponentInChildren<Button>();
 
             spawnButton.onClick.AddListener(() => TestDriveManager.DestroyAllCars());
+        }
+
+        /// <summary>
+        ///     Initializes <see cref="SwitchFollowElement"/>.
+        /// </summary>
+        private void InitializeSwitchFollowElement()
+        {
+            Button spawnButton = SwitchFollowElement.GetComponentInChildren<Button>();
+
+            spawnButton.onClick.AddListener(() => TestDriveManager.SwitchCameraFollow());
         }
 
         /// <summary>
@@ -112,6 +119,11 @@ namespace DPlay.AICar.UIControls
             if (ResetElement != null)
             {
                 InitializeResetElement();
+            }
+
+            if (SwitchFollowElement != null)
+            {
+                InitializeSwitchFollowElement();
             }
 
             if (TopDownCameraElement != null)

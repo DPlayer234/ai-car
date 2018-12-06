@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DPlay.AICar
 {
@@ -15,5 +11,10 @@ namespace DPlay.AICar
         ///     A global <see cref="System.Random"/> object for generating random numbers.
         /// </summary>
         public static readonly Random Random = new Random();
+
+        /// <summary>
+        ///     A number for a large distance.
+        /// </summary>
+        public const float LargeDistance = 6e6f;
     }
 }

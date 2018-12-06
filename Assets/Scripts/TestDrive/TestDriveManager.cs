@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 using DPlay.AICar.Car;
 using DPlay.AICar.MachineLearning;
+using DPlay.AICar.Misc;
+using UnityEngine;
 
 namespace DPlay.AICar.TestDrive
 {
@@ -14,14 +12,29 @@ namespace DPlay.AICar.TestDrive
     /// </summary>
     public class TestDriveManager : MonoBehaviour
     {
+        /// <summary> <seealso cref="Car.CameraController"/> to follow a car. </summary>
+        public CameraController CameraController;
+
         /// <summary> The prefab for cars with a neural network. </summary>
         public CarControllerNeural CarNeuralPrefab;
+
+        /// <summary> The prefab for cars with steering behavior. </summary>
+        public CarControllerSteering CarSteeringPrefab;
 
         /// <summary> The "spawn point" of the cars. Position and rotation of new members is overridden to the one of this <seealso cref="Transform"/>. </summary>
         public Transform SpawnPoint;
 
         /// <summary> How far from the <seealso cref="SpawnPoint"/> cars may be spawned. </summary>
         public float MaximumSpawnOffset;
+
+        /// <summary> The default transform for <see cref="CameraController"/> to follow if no other exists. </summary>
+        private Transform defaultCameraToFollow;
+
+        /// <summary> Index of the transform in <see cref="cameraFollowTransforms"/> <see cref="CameraController"/> is following. </summary>
+        private int currentFollowIndex = -1;
+
+        /// <summary> Possible transforms for <see cref="CameraController"/> to follow </summary>
+        private List<Transform> cameraFollowTransforms = new List<Transform>();
 
         /// <summary> Root transform for all spawned cars. </summary>
         private Transform spawnRoot;
@@ -38,6 +51,9 @@ namespace DPlay.AICar.TestDrive
 
             spawnRoot = new GameObject("CarsRoot").transform;
             spawnRoot.parent = transform;
+        
+            cameraFollowTransforms.Clear();
+            SwitchCameraFollow();
         }
 
         /// <summary>
@@ -65,7 +81,10 @@ namespace DPlay.AICar.TestDrive
             {
                 Debug.LogError("The genome is invalid.");
                 Destroy(car.gameObject);
+                return;
             }
+
+            cameraFollowTransforms.Add(car.transform);
         }
 
         /// <summary>
@@ -73,7 +92,31 @@ namespace DPlay.AICar.TestDrive
         /// </summary>
         public void SpawnSteeringCar()
         {
-            // TODO
+            CarControllerSteering car = SpawnCar(CarSteeringPrefab);
+
+            cameraFollowTransforms.Add(car.transform);
+        }
+
+        /// <summary>
+        ///     Switches the car/transform the camera is following to the next one in line.
+        /// </summary>
+        public void SwitchCameraFollow()
+        {
+            currentFollowIndex += 1;
+
+            if (currentFollowIndex >= cameraFollowTransforms.Count)
+            {
+                currentFollowIndex = -1;
+            }
+
+            if (currentFollowIndex < 0)
+            {
+                CameraController.ToFollow = defaultCameraToFollow;
+            }
+            else
+            {
+                CameraController.ToFollow = cameraFollowTransforms[currentFollowIndex];
+            }
         }
 
         /// <summary>
@@ -97,15 +140,23 @@ namespace DPlay.AICar.TestDrive
             {
                 painter.Color = HelperFunctions.GetRandomColor();
             }
-
+            
             return car;
         }
 
         /// <summary>
         ///     Called by Unity once to initialize the <see cref="TestDriveManager"/>.
         /// </summary>
+        /// <exception cref="UnassignedReferenceException">No CameraController was assigned.</exception>
         private void Awake()
         {
+            if (CameraController == null)
+            {
+                throw new UnassignedReferenceException("The CameraController was not assigned.");
+            }
+
+            defaultCameraToFollow = CameraController.ToFollow;
+
             DestroyAllCars();
         }
     }

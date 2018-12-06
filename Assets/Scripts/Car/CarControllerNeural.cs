@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
 using DPlay.AICar.MachineLearning;
 using DPlay.AICar.MachineLearning.Evolution;
+using UnityEngine;
 
 namespace DPlay.AICar.Car
 {
@@ -17,7 +14,7 @@ namespace DPlay.AICar.Car
         public const double TotalFitnessMultiplier = 10.0;
 
         /// <summary> Multiplier for the fitness reduction caused by driving in reverse. </summary>
-        public const double ReverseDrivingFitnessPenaltyMultiplier = 20.0;
+        public const double ReverseDrivingFitnessPenaltyMultiplier = 50.0;
 
         /// <summary> Angles for the input ray-casts. </summary>
         public float[] RayCastAngles = { -35, 0, 35, 180 };
@@ -98,6 +95,18 @@ namespace DPlay.AICar.Car
         }
 
         /// <summary>
+        ///     Creates and initializes the brain.
+        ///     The output neurons have their Activation Functions set to <see cref="ActivationFunctions.Tanh"/>.
+        /// </summary>
+        protected void InitializeBrain()
+        {
+            int inputCount = RayCastAngles.Length;
+            Brain = new NeuralNet(inputCount, inputCount, 2);
+
+            Brain.OutputLayer.SetAllActivationFunctions(ActivationFunctions.Tanh);
+        }
+
+        /// <summary>
         ///     Records the ray-casts, writes their distances to the <seealso cref="Brain"/>'s input nerves and then calculates the predictions.
         /// </summary>
         protected void RecordRayCasts()
@@ -114,20 +123,29 @@ namespace DPlay.AICar.Car
                     ? hitInfo.distance
                     : MaximumRayCastDistance;
             }
+        }
 
+        /// <summary>
+        ///     Computes the new inputs by calling <seealso cref="Brain"/>.Predict();
+        /// </summary>
+        protected void ComputeInputs()
+        {
             Brain.Predict();
         }
-        
-        /// <summary>
-        ///     Creates and initializes the brain.
-        ///     The output neurons have their Activation Functions set to <see cref="ActivationFunctions.Tanh"/>.
-        /// </summary>
-        protected void InitializeBrain()
-        {
-            int inputCount = RayCastAngles.Length;
-            Brain = new NeuralNet(inputCount, inputCount, 2);
 
-            Brain.OutputLayer.SetAllActivationFunctions(ActivationFunctions.Tanh);
+        /// <summary>
+        ///     Updates the <see cref="Fitness"/> value based on the current circumstances.
+        /// </summary>
+        /// <param name="deltaTime">The time since the last fitness update.</param>
+        protected virtual void UpdateFitness(float deltaTime)
+        {
+            double fitnessDelta = LinearSpeed * deltaTime * TotalFitnessMultiplier;
+            if (fitnessDelta < 0.0f)
+            {
+                fitnessDelta *= ReverseDrivingFitnessPenaltyMultiplier;
+            }
+
+            Fitness += fitnessDelta;
         }
 
         /// <summary>
@@ -146,16 +164,11 @@ namespace DPlay.AICar.Car
         protected override void FixedUpdate()
         {
             RecordRayCasts();
+            ComputeInputs();
 
             base.FixedUpdate();
-            
-            double fitnessDelta = LinearSpeed * Time.fixedDeltaTime * TotalFitnessMultiplier;
-            if (fitnessDelta < 0.0f)
-            {
-                fitnessDelta *= ReverseDrivingFitnessPenaltyMultiplier;
-            }
 
-            Fitness += fitnessDelta;
+            UpdateFitness(Time.fixedDeltaTime);
         }
 
         /// <summary>

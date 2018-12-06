@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DPlay.AICar.MachineLearning.Evolution;
+﻿using DPlay.AICar.MachineLearning.Evolution;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace DPlay.AICar.UIControls
 {
     /// <summary>
     ///     Provides function to be used in the Evolution Menu and sets it up.
     /// </summary>
+    [DisallowMultipleComponent]
     public class UIEvolutionManager : MonoBehaviour
     {
         /// <summary> The used <seealso cref="MachineLearning.Evolution.EvolutionManager"/>. </summary>
@@ -20,6 +16,13 @@ namespace DPlay.AICar.UIControls
 
         /// <summary> The root element for the maximum generation age slider. </summary>
         public GameObject MaximumGenerationAgeElement;
+
+        /// <summary> The root element for the total car count slider. </summary>
+        public GameObject TotalCountCarElement;
+
+        /// <summary> The amount of random cars to spawn. </summary>
+        [Range(0, 20)]
+        public int RandomCarCount = 20;
 
         /// <summary> The root element for the current generation age display. </summary>
         public GameObject CurrentGenerationAgeElement;
@@ -56,6 +59,26 @@ namespace DPlay.AICar.UIControls
             UnityAction<float> func = value =>
             {
                 EvolutionManager.MaximumGenerationAge = value;
+                valueText.text = value.ToString();
+            };
+
+            slider.onValueChanged.AddListener(func);
+            func(slider.value);
+        }
+
+        /// <summary>
+        ///     Initializes <see cref="TotalCountCarElement"/>.
+        /// </summary>
+        private void InitializeTotalCarCountElement()
+        {
+            Text valueText = TotalCountCarElement.GetComponentInChildren<Text>();
+            Slider slider = TotalCountCarElement.GetComponentInChildren<Slider>();
+
+            UnityAction<float> func = fvalue =>
+            {
+                int value = Mathf.RoundToInt(fvalue);
+                EvolutionManager.TotalCount = value;
+                EvolutionManager.ChildCount = value - RandomCarCount;
                 valueText.text = value.ToString();
             };
 
@@ -144,6 +167,11 @@ namespace DPlay.AICar.UIControls
             if (MaximumGenerationAgeElement != null)
             {
                 InitializeMaximumGenerateAgeElement();
+            }
+
+            if (TotalCountCarElement != null)
+            {
+                InitializeTotalCarCountElement();
             }
 
             if (CurrentGenerationAgeElement != null)

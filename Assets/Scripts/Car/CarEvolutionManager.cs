@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DPlay.AICar.MachineLearning;
-using DPlay.AICar.MachineLearning.Evolution;
+﻿using DPlay.AICar.MachineLearning.Evolution;
+using DPlay.AICar.Misc;
 using UnityEngine;
 
 namespace DPlay.AICar.Car

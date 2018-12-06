@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DPlay.AICar.MachineLearning
+﻿namespace DPlay.AICar.MachineLearning
 {
     /// <summary>
     ///     A "Nerve" -- Implements the <see cref="INeuron"/> interface solely for inputting values into a system.

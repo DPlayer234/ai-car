@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace DPlay.AICar.MachineLearning.Evolution
@@ -17,6 +14,7 @@ namespace DPlay.AICar.MachineLearning.Evolution
     ///     
     ///     The first generation is entirely random.
     /// </summary>
+    [DisallowMultipleComponent]
     public class EvolutionManager : MonoBehaviour
     {
         /// <summary> The prefab instantiated per member of a generation. Must contain one <seealso cref="IEvolvable"/> Component. </summary>

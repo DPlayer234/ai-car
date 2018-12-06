@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 namespace DPlay.AICar.UIControls
 {
@@ -12,6 +6,7 @@ namespace DPlay.AICar.UIControls
     ///     Scales a UI Element in such a way, that it's ratio stays constant.
     /// </summary>
     [RequireComponent(typeof(RectTransform))]
+    [DisallowMultipleComponent]
     public class UIRatioScalar : MonoBehaviour
     {
         /// <summary> The ratio for scaling. (1 or more = Wide) </summary>
