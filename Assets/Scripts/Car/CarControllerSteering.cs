@@ -167,8 +167,7 @@ namespace DPlay.AICar.Car
             var forwards = new StateForward(this);
             var backwards = new StateBackwards(this);
 
-            accelerationStateMachine.AddState(forwards);
-            accelerationStateMachine.AddState(backwards);
+            accelerationStateMachine.ActiveState = forwards;
 
             accelerationStateMachine.AddTransition(forwards, backwards);
             accelerationStateMachine.AddTransition(backwards, forwards);
