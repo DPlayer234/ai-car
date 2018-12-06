@@ -480,7 +480,7 @@ MonoBehaviour:
   Renderers:
   - {fileID: 23884683028993438}
   - {fileID: 23409448329907022}
-  color: {r: 1, g: 0.8260877, b: 0, a: 0}
+  color: {r: 1, g: 0.6431373, b: 0, a: 1}
 --- !u!136 &136468965375490424
 CapsuleCollider:
   m_ObjectHideFlags: 1

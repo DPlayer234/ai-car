@@ -138,7 +138,7 @@ namespace DPlay.AICar.TestDrive
 
             if (painter != null)
             {
-                painter.Color = HelperFunctions.GetRandomColor();
+                painter.Color *= HelperFunctions.GetRandomColor();
             }
             
             return car;

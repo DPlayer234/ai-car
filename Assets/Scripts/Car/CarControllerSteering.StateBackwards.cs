@@ -3,7 +3,7 @@
 namespace DPlay.AICar.Car
 {
     /// <summary>
-    ///     Controls the car based on a custom algorithm.
+    ///     Controls the car based on a custom algorithm and steering behavior.
     /// </summary>
     public partial class CarControllerSteering
     {
@@ -15,8 +15,11 @@ namespace DPlay.AICar.Car
             /// <summary> The distance to a wall that is considered far enough to start driving forwards again. </summary>
             private const float NotCloseToWall = 3.5f;
 
+            /// <summary> The multiplier for the linear speed input. </summary>
+            private const float LinearInputMultiplier = 0.1f;
+
             /// <summary> The source object that the related FSM belongs to. </summary>
-            private CarControllerSteering self;
+            private readonly CarControllerSteering self;
 
             /// <summary>
             ///     Initializes a new instance of the <see cref="CarControllerSteering"/> class.
@@ -28,12 +31,12 @@ namespace DPlay.AICar.Car
             }
 
             /// <summary>
-            ///     Called when the state is entered/set as active. Does nothing.
+            ///     Called when the state is entered/set as active. Does nothing here.
             /// </summary>
             public void Enter() { }
 
             /// <summary>
-            ///     Called when the state is exitted/set as not active. Does nothing.
+            ///     Called when the state is exitted/set as not active. Does nothing here.
             /// </summary>
             public void Exit() { }
 

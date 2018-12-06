@@ -4,7 +4,7 @@ using UnityEngine;
 namespace DPlay.AICar.Car
 {
     /// <summary>
-    ///     Controls the car based on a custom algorithm.
+    ///     Controls the car based on a custom algorithm and steering behavior.
     /// </summary>
     public partial class CarControllerSteering : CarController
     {
@@ -35,14 +35,11 @@ namespace DPlay.AICar.Car
         /// <summary> The angle for the ray cast going backwards. </summary>
         private const float BackwardsAngle = 180;
 
-        /// <summary> The multiplier for the linear speed input. </summary>
-        private const float LinearInputMultiplier = 0.1f;
-
         /// <summary> The multiplier for the angular speed input based on half-left/right angles. </summary>
-        private const float HalfAngularInputMultiplier = 8.0f;
+        private const float HalfAngularInputMultiplier = 7.0f;
 
         /// <summary> The multiplier for the angular speed input based on left/right angles. </summary>
-        private const float AngularInputMultiplier = 3.0f;
+        private const float AngularInputMultiplier = 2.0f;
 
         /// <summary> The used FSM. </summary>
         private FiniteStateMachine accelerationStateMachine;

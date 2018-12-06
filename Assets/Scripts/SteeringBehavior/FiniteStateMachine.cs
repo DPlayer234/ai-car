@@ -26,12 +26,9 @@ namespace DPlay.AICar.SteeringBehavior
 
             set
             {
-                if (activeState != null)
-                {
-                    activeState.Exit();
-                }
+                activeState?.Exit();
+                value?.Enter();
 
-                value.Enter();
                 activeState = value;
             }
         }
@@ -40,13 +37,11 @@ namespace DPlay.AICar.SteeringBehavior
         ///     Registers a transition from one state to another.
         ///     Make sure to implement <see cref="IState{T}"/>!
         /// </summary>
-        /// <typeparam name="TFrom">The type of the state to transition from.</typeparam>
         /// <typeparam name="TTo">The type of the state to transition to.</typeparam>
         /// <param name="from">The state to transition from.</param>
         /// <param name="to">The state to transition to.</param>
         /// <returns>The new transition object.</returns>
-        public Transition AddTransition<TFrom, TTo>(TFrom from, TTo to)
-            where TFrom : IState<TTo>
+        public Transition AddTransition<TTo>(IState<TTo> from, TTo to)
             where TTo : IState
         {
             Transition trans = new Transition(from, to, from.MayTransition);

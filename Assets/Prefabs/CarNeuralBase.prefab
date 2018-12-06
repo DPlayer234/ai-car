@@ -391,7 +391,7 @@ MonoBehaviour:
   Renderers:
   - {fileID: 23638626934774302}
   - {fileID: 23319333861067404}
-  color: {r: 1, g: 0, b: 1, a: 0}
+  color: {r: 0.28762573, g: 0.7830189, b: 0.07756319, a: 1}
 --- !u!114 &114829564173646248
 MonoBehaviour:
   m_ObjectHideFlags: 1
