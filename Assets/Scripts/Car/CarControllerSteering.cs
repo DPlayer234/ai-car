@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using DPlay.AICar.SteeringBehavior;
+using UnityEngine;
 
 namespace DPlay.AICar.Car
 {
     /// <summary>
     ///     Controls the car based on a custom algorithm.
     /// </summary>
-    public class CarControllerSteering : CarController
+    public partial class CarControllerSteering : CarController
     {
         /// <summary> The offset for the ray-cast origin. </summary>
         public Vector3 RayCastOriginOffset = new Vector3(0.0f, 0.5f, 0.0f);
@@ -33,12 +34,6 @@ namespace DPlay.AICar.Car
 
         /// <summary> The angle for the ray cast going backwards. </summary>
         private const float BackwardsAngle = 180;
-        
-        /// <summary> The distance to a wall that is considered close. </summary>
-        private const float CloseToWall = 2.5f;
-
-        /// <summary> The distance to a wall that is considered far enough to start driving forwards again. </summary>
-        private const float CloseToWallStop = 3.5f;
 
         /// <summary> The multiplier for the linear speed input. </summary>
         private const float LinearInputMultiplier = 0.1f;
@@ -48,6 +43,9 @@ namespace DPlay.AICar.Car
 
         /// <summary> The multiplier for the angular speed input based on left/right angles. </summary>
         private const float AngularInputMultiplier = 3.0f;
+
+        /// <summary> The used FSM. </summary>
+        private FiniteStateMachine accelerationStateMachine;
 
         /// <summary> The distance to the next barrier along the ray of <see cref="ForwardsAngle"/>. </summary>
         private float forwardsDistance;
@@ -132,31 +130,20 @@ namespace DPlay.AICar.Car
                 (rightDistance - leftDistance) * AngularInputMultiplier +
                 (halfRightDistance - halfLeftDistance) * HalfAngularInputMultiplier;
 
-            if (linearSpeedInput >= 0)
-            {
-                if (forwardsDistance < CloseToWall)
-                {
-                    linearSpeedInput = -1.0f;
-                }
-                else
-                {
-                    linearSpeedInput = forwardsDistance * LinearInputMultiplier;
-                }
-            }
-            else
-            {
-                if (forwardsDistance > CloseToWallStop)
-                {
-                    linearSpeedInput = 0.0f;
-                }
-                else
-                {
-                    linearSpeedInput = -backwardsDistance * LinearInputMultiplier;
-                }
-            }
+            accelerationStateMachine.Update();
 
             linearSpeedInput = Mathf.Clamp(linearSpeedInput, -1.0f, 1.0f);
             angularSpeedInput = Mathf.Clamp(angularSpeedInput, -1.0f, 1.0f);
+        }
+
+        /// <summary>
+        ///     Called by Unity to initialize the <see cref="CarControllerSteering"/>.
+        /// </summary>
+        protected override void Awake()
+        {
+            InitializeFSM();
+
+            base.Awake();
         }
 
         /// <summary>
@@ -168,6 +155,23 @@ namespace DPlay.AICar.Car
             ComputeInputs();
 
             base.FixedUpdate();
+        }
+
+        /// <summary>
+        ///     Initializes the <see cref="accelerationStateMachine"/>.
+        /// </summary>
+        private void InitializeFSM()
+        {
+            accelerationStateMachine = new FiniteStateMachine();
+
+            var forwards = new StateForward(this);
+            var backwards = new StateBackwards(this);
+
+            accelerationStateMachine.AddState(forwards);
+            accelerationStateMachine.AddState(backwards);
+
+            accelerationStateMachine.AddTransition(forwards, backwards);
+            accelerationStateMachine.AddTransition(backwards, forwards);
         }
     }
 }
