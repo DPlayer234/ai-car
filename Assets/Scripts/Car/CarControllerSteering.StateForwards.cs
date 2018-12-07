@@ -10,7 +10,7 @@ namespace DPlay.AICar.Car
         /// <summary>
         ///     FSM State for driving forwards.
         /// </summary>
-        private class StateForward : FiniteStateMachine.IState<StateBackwards>
+        private class StateForward : FSM<CarControllerSteering>.IStateTo<StateBackwards>
         {
             /// <summary> The distance to a wall that is considered close. </summary>
             private const float CloseToWall = 2.5f;
@@ -18,43 +18,24 @@ namespace DPlay.AICar.Car
             /// <summary> The multiplier for the linear speed input. </summary>
             private const float LinearInputMultiplier = 0.1f;
 
-            /// <summary> The source object that the related FSM belongs to. </summary>
-            private readonly CarControllerSteering self;
-
-            /// <summary>
-            ///     Initializes a new instance of the <see cref="CarControllerSteering"/> class.
-            /// </summary>
-            /// <param name="self">The source object that the related FSM belongs to.</param>
-            public StateForward(CarControllerSteering self)
-            {
-                this.self = self;
-            }
-
-            /// <summary>
-            ///     Called when the state is entered/set as active. Does nothing here.
-            /// </summary>
-            public void Enter() { }
-
-            /// <summary>
-            ///     Called when the state is exitted/set as not active. Does nothing here.
-            /// </summary>
-            public void Exit() { }
+            /// <summary> The <see cref="CarControllerSteering"/> this state is for. </summary>
+            public CarControllerSteering Self { get; set; }
 
             /// <summary>
             ///     Called every update while active. Sets the linear speed input.
             /// </summary>
             public void Update()
             {
-                self.linearSpeedInput = self.forwardsDistance * LinearInputMultiplier;
+                Self.linearSpeedInput = Self.forwardsDistance * LinearInputMultiplier;
             }
 
             /// <summary>
             ///     Indicates whether a transition to <see cref="StateBackwards"/> is allowed.
             /// </summary>
             /// <returns>A boolean indicating whether the transition may occur.</returns>
-            bool FiniteStateMachine.IState<StateBackwards>.MayTransition()
+            bool FSM<CarControllerSteering>.IStateTo<StateBackwards>.MayTransition()
             {
-                return self.forwardsDistance < CloseToWall;
+                return Self.forwardsDistance < CloseToWall;
             }
         }
     }

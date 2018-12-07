@@ -5,13 +5,26 @@ namespace DPlay.AICar.SteeringBehavior
     /// <summary>
     ///     Implements a simple Finite State Machine behavior with states and transitions.
     /// </summary>
-    public sealed partial class FiniteStateMachine
+    /// <typeparam name="T">The type of the referrence object <seealso cref="Self"/></typeparam>
+    public sealed partial class FSM<T>
     {
+        /// <summary> A list of all registered transitions. </summary>
+        public List<Transition> Transitions = new List<Transition>();
+
         /// <summary> Internal field to store the active state. Use <see cref="ActiveState"/> instead. </summary>
         private IState activeState;
 
-        /// <summary> A list of all registered transitions. </summary>
-        public List<Transition> Transitions = new List<Transition>();
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="FSM{T}"/> class.
+        /// </summary>
+        /// <param name="self">The referrence object.</param>
+        public FSM(T self)
+        {
+            Self = self;
+        }
+
+        /// <summary> The referrence object. </summary>
+        public T Self { get; private set; }
 
         /// <summary>
         ///     The currently active and therefore updated state.
@@ -26,8 +39,14 @@ namespace DPlay.AICar.SteeringBehavior
 
             set
             {
-                activeState?.Exit();
-                value?.Enter();
+                (activeState as IStateEnterExit)?.Exit();
+
+                if (value != null)
+                {
+                    value.Self = Self;
+                }
+
+                (value as IStateEnterExit)?.Enter();
 
                 activeState = value;
             }
@@ -35,13 +54,13 @@ namespace DPlay.AICar.SteeringBehavior
 
         /// <summary>
         ///     Registers a transition from one state to another.
-        ///     Make sure to implement <see cref="IState{T}"/>!
+        ///     Make sure to implement <see cref="IStateTo{T}"/>!
         /// </summary>
         /// <typeparam name="TTo">The type of the state to transition to.</typeparam>
         /// <param name="from">The state to transition from.</param>
         /// <param name="to">The state to transition to.</param>
         /// <returns>The new transition object.</returns>
-        public Transition AddTransition<TTo>(IState<TTo> from, TTo to)
+        public Transition AddTransition<TTo>(IStateTo<TTo> from, TTo to)
             where TTo : IState
         {
             Transition trans = new Transition(from, to, from.MayTransition);

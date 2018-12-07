@@ -42,7 +42,7 @@ namespace DPlay.AICar.Car
         private const float AngularInputMultiplier = 2.0f;
 
         /// <summary> The used FSM. </summary>
-        private FiniteStateMachine accelerationStateMachine;
+        private FSM<CarControllerSteering> accelerationStateMachine;
 
         /// <summary> The distance to the next barrier along the ray of <see cref="ForwardsAngle"/>. </summary>
         private float forwardsDistance;
@@ -159,10 +159,10 @@ namespace DPlay.AICar.Car
         /// </summary>
         private void InitializeFSM()
         {
-            accelerationStateMachine = new FiniteStateMachine();
+            accelerationStateMachine = new FSM<CarControllerSteering>(this);
 
-            var forwards = new StateForward(this);
-            var backwards = new StateBackwards(this);
+            var forwards = new StateForward();
+            var backwards = new StateBackwards();
 
             accelerationStateMachine.ActiveState = forwards;
 
