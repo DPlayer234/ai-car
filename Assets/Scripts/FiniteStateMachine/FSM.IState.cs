@@ -1,4 +1,4 @@
-﻿namespace DPlay.AICar.SteeringBehavior
+﻿namespace DPlay.AICar.FiniteStateMachine
 {
     /// <summary>
     ///     Implements a simple Finite State Machine behavior with states and transitions.

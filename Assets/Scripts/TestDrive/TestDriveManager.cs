@@ -21,6 +21,12 @@ namespace DPlay.AICar.TestDrive
         /// <summary> The prefab for cars with steering behavior. </summary>
         public CarControllerSteering CarSteeringPrefab;
 
+        /// <summary> The path spawned steering cars are supposed to follow. </summary>
+        public Path SteeringPath;
+
+        /// <summary> The prefab for cars with avoidance behavior. </summary>
+        public CarControllerAvoidance CarAvoidancePrefab;
+
         /// <summary> The "spawn point" of the cars. Position and rotation of new members is overridden to the one of this <seealso cref="Transform"/>. </summary>
         public Transform SpawnPoint;
 
@@ -93,6 +99,17 @@ namespace DPlay.AICar.TestDrive
         public void SpawnSteeringCar()
         {
             CarControllerSteering car = SpawnCar(CarSteeringPrefab);
+            car.Path = SteeringPath;
+
+            cameraFollowTransforms.Add(car.transform);
+        }
+
+        /// <summary>
+        ///     Spawns a car using avoidance behavior.
+        /// </summary>
+        public void SpawnAvoidanceCar()
+        {
+            CarControllerAvoidance car = SpawnCar(CarAvoidancePrefab);
 
             cameraFollowTransforms.Add(car.transform);
         }

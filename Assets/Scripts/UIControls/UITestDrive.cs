@@ -20,6 +20,9 @@ namespace DPlay.AICar.UIControls
         /// <summary> The root element for the steering agent spawner button. </summary>
         public GameObject SteeringAgentSpawnerElement;
 
+        /// <summary> The root element for the avoidance agent spawner button. </summary>
+        public GameObject AvoidanceAgentSpawnerElement;
+
         /// <summary> The root element for the reset button. </summary>
         public GameObject ResetElement;
 
@@ -52,6 +55,16 @@ namespace DPlay.AICar.UIControls
             Button spawnButton = SteeringAgentSpawnerElement.GetComponentInChildren<Button>();
 
             spawnButton.onClick.AddListener(() => TestDriveManager.SpawnSteeringCar());
+        }
+
+        /// <summary>
+        ///     Initializes <see cref="AvoidanceAgentSpawnerElement"/>.
+        /// </summary>
+        private void InitializeAvoidanceAgentSpawnerElement()
+        {
+            Button spawnButton = AvoidanceAgentSpawnerElement.GetComponentInChildren<Button>();
+
+            spawnButton.onClick.AddListener(() => TestDriveManager.SpawnAvoidanceCar());
         }
 
         /// <summary>
@@ -114,6 +127,11 @@ namespace DPlay.AICar.UIControls
             if (SteeringAgentSpawnerElement != null)
             {
                 InitializeSteeringAgentSpawnerElement();
+            }
+
+            if (AvoidanceAgentSpawnerElement != null)
+            {
+                InitializeAvoidanceAgentSpawnerElement();
             }
 
             if (ResetElement != null)

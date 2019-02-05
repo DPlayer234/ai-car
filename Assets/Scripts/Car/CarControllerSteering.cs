@@ -1,71 +1,36 @@
-﻿using DPlay.AICar.SteeringBehavior;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace DPlay.AICar.Car
 {
     /// <summary>
-    ///     Controls the car based on a custom algorithm and steering behavior.
+    ///     Controls the car based on a given path via steering behavior.
     /// </summary>
-    public partial class CarControllerSteering : CarController
+    public class CarControllerSteering : CarController
     {
-        /// <summary> The offset for the ray-cast origin. </summary>
-        public Vector3 RayCastOriginOffset = new Vector3(0.0f, 0.5f, 0.0f);
+        /// <summary> The distance forward to use to detect the next closest path segment </summary>
+        public float PredictionDistance = 2.5f;
 
-        /// <summary> The layer mask to select what may be considered by the ray-casts. </summary>
-        public LayerMask RayCastLayerMask;
+        /// <summary> The distance along the path segment to add </summary>
+        public float FutureDistance = 2.5f;
 
-        /// <summary> The maximum distance the raycasts are sent out. </summary>
-        private const float MaximumRayCastDistance = 15.0f;
+        /// <summary> The multiplier to apply to linear speed inputs </summary>
+        public float LinearSpeedMultiplier = 1.0f;
 
-        /// <summary> The angle for the ray cast going forwards. </summary>
-        private const float ForwardsAngle = 0;
+        /// <summary> The multiplier to apply to angular speed inputs </summary>
+        public float AngularSpeedMultiplier = 0.1f;
 
-        /// <summary> The angle for the ray cast going half-left. </summary>
-        private const float HalfLeftAngle = -25;
+        /// <summary> The path this car is supposed to follow </summary>
+        public Path Path;
 
-        /// <summary> The angle for the ray cast going half-right. </summary>
-        private const float HalfRightAngle = 25;
-
-        /// <summary> The angle for the ray cast going left. </summary>
-        private const float LeftAngle = -80;
-
-        /// <summary> The angle for the ray cast going right. </summary>
-        private const float RightAngle = 80;
-
-        /// <summary> The angle for the ray cast going backwards. </summary>
-        private const float BackwardsAngle = 180;
-
-        /// <summary> The multiplier for the angular speed input based on half-left/right angles. </summary>
-        private const float HalfAngularInputMultiplier = 7.0f;
-
-        /// <summary> The multiplier for the angular speed input based on left/right angles. </summary>
-        private const float AngularInputMultiplier = 2.0f;
-
-        /// <summary> The used FSM. </summary>
-        private FSM<CarControllerSteering> accelerationStateMachine;
-
-        /// <summary> The distance to the next barrier along the ray of <see cref="ForwardsAngle"/>. </summary>
-        private float forwardsDistance;
-
-        /// <summary> The distance to the next barrier along the ray of <see cref="HalfLeftAngle"/>. </summary>
-        private float halfLeftDistance;
-
-        /// <summary> The distance to the next barrier along the ray of <see cref="HalfRightAngle"/>. </summary>
-        private float halfRightDistance;
-
-        /// <summary> The distance to the next barrier along the ray of <see cref="LeftAngle"/>. </summary>
-        private float leftDistance;
-
-        /// <summary> The distance to the next barrier along the ray of <see cref="RightAngle"/>. </summary>
-        private float rightDistance;
-
-        /// <summary> The distance to the next barrier along the ray of <see cref="BackwardsAngle"/>. </summary>
-        private float backwardsDistance;
-
-        /// <summary> Computed value for <see cref="GetLinearSpeedInput"/> </summary>
+        /// <summary> Stores the computed value for the linear speed input </summary>
         private float linearSpeedInput;
 
-        /// <summary> Computed value for <see cref="GetAngularSpeedInput"/> </summary>
+        /// <summary> Stores the computed value for the angular speed input </summary>
         private float angularSpeedInput;
 
         /// <summary>
@@ -74,7 +39,7 @@ namespace DPlay.AICar.Car
         /// <returns>The input value.</returns>
         public override float GetLinearSpeedInput()
         {
-            return linearSpeedInput;
+            return Mathf.Clamp(linearSpeedInput, -1.0f, 1.0f); ;
         }
 
         /// <summary>
@@ -83,54 +48,7 @@ namespace DPlay.AICar.Car
         /// <returns>The input value.</returns>
         public override float GetAngularSpeedInput()
         {
-            return angularSpeedInput;
-        }
-
-        /// <summary>
-        ///     Records a single raycast and returns the distance to the next wall.
-        /// </summary>
-        /// <param name="angle">The angle of the ray relative to the current facing direction.</param>
-        /// <returns>The distance to the next wall or <seealso cref="Globals.LargeDistance"/> if nothing is hit.</returns>
-        protected float RecordRayCast(float angle)
-        {
-            Vector3 direction = HelperFunctions.RotateAroundY(transform.forward, angle);
-
-            RaycastHit hitInfo;
-
-            return Physics.Raycast(transform.position + RayCastOriginOffset, direction, out hitInfo, MaximumRayCastDistance, RayCastLayerMask.value)
-                ? hitInfo.distance
-                : Globals.LargeDistance;
-        }
-
-        /// <summary>
-        ///     Records the current ray cast distances.
-        /// </summary>
-        protected void RecordRayCasts()
-        {
-            forwardsDistance = RecordRayCast(ForwardsAngle);
-
-            halfLeftDistance = RecordRayCast(HalfLeftAngle);
-            halfRightDistance = RecordRayCast(HalfRightAngle);
-
-            leftDistance = RecordRayCast(LeftAngle);
-            rightDistance = RecordRayCast(RightAngle);
-
-            backwardsDistance = RecordRayCast(BackwardsAngle);
-        }
-
-        /// <summary>
-        ///     Computes the required inputs based on the current ray cast distances.
-        /// </summary>
-        protected void ComputeInputs()
-        {
-            angularSpeedInput =
-                (rightDistance - leftDistance) * AngularInputMultiplier +
-                (halfRightDistance - halfLeftDistance) * HalfAngularInputMultiplier;
-
-            accelerationStateMachine.Update();
-
-            linearSpeedInput = Mathf.Clamp(linearSpeedInput, -1.0f, 1.0f);
-            angularSpeedInput = Mathf.Clamp(angularSpeedInput, -1.0f, 1.0f);
+            return Mathf.Clamp(angularSpeedInput, -1.0f, 1.0f); ;
         }
 
         /// <summary>
@@ -138,8 +56,6 @@ namespace DPlay.AICar.Car
         /// </summary>
         protected override void Awake()
         {
-            InitializeFSM();
-
             base.Awake();
         }
 
@@ -148,26 +64,36 @@ namespace DPlay.AICar.Car
         /// </summary>
         protected override void FixedUpdate()
         {
-            RecordRayCasts();
-            ComputeInputs();
+            Vector3 targetPosition = ComputeTargetPosition();
+
+            // Get the position and angle offset
+            Vector3 desiredDirection = targetPosition - transform.position;
+            float angleOffset = Vector3.Angle(transform.forward, desiredDirection);
+
+            // Make sure angle is signed (to the right, positive; to the left, negative)
+            bool right = Vector3.Angle(transform.right, desiredDirection) < Vector3.Angle(-transform.right, desiredDirection);
+            if (!right) angleOffset *= -1;
+
+            linearSpeedInput = desiredDirection.magnitude / (PredictionDistance + FutureDistance) * LinearSpeedMultiplier;
+            angularSpeedInput = angleOffset * AngularSpeedMultiplier;
 
             base.FixedUpdate();
         }
 
         /// <summary>
-        ///     Initializes the <see cref="accelerationStateMachine"/>.
+        ///     Computes the target position to drive to now and returns it.
         /// </summary>
-        private void InitializeFSM()
+        /// <returns>The target position</returns>
+        private Vector3 ComputeTargetPosition()
         {
-            accelerationStateMachine = new FSM<CarControllerSteering>(this);
+            Vector3 predictedPos = transform.position + rigidbody.velocity.normalized * PredictionDistance;
+            PathSegment segment = Path.GetClosestSegment(predictedPos);
+            Vector3 normalPos = segment.GetNormalPointTo(predictedPos);
+            Vector3 nextOffset = segment.Direction * FutureDistance;
 
-            var forwards = new StateForward();
-            var backwards = new StateBackwards();
-
-            accelerationStateMachine.ActiveState = forwards;
-
-            accelerationStateMachine.AddTransition(forwards, backwards);
-            accelerationStateMachine.AddTransition(backwards, forwards);
+            return Vector3.Distance(predictedPos, normalPos) > Path.Radius
+                ? normalPos + nextOffset
+                : transform.position + nextOffset;
         }
     }
 }
